@@ -8,6 +8,33 @@ from utils import convert_userdata_to_df
 from constants import SAMPLE_MODELINPUT
 
 
+SINGLE_PERSON_DATA = {
+    "CREDIT_LIMIT": 500000.0,
+    "SEX": 1,
+    "EDUCATION": 3,
+    "MARITALSTATUS": 1,
+    "AGE": 47,
+    "PAYMENTDELAY_1": 0,
+    "PAYMENTDELAY_2": 0,
+    "PAYMENTDELAY_3": 0,
+    "PAYMENTDELAY_4": 0,
+    "PAYMENTDELAY_5": 0,
+    "PAYMENTDELAY_6": 0,
+    "BILL_AMT1": 18033.0,
+    "BILL_AMT2": 8783.0,
+    "BILL_AMT3": 13202.0,
+    "BILL_AMT4": 16546.0,
+    "BILL_AMT5": 12585.0,
+    "BILL_AMT6": 14287.0,
+    "PAID_AMT1": 8783.0,
+    "PAID_AMT2": 13357.0,
+    "PAID_AMT3": 16600.0,
+    "PAID_AMT4": 12585.0,
+    "PAID_AMT5": 14287.0,
+    "PAID_AMT6": 25793.0,
+}
+
+
 def predict_one(user_data: dict) -> dict:
     """
     Predicts the loan risk for a single user.
@@ -25,11 +52,12 @@ def predict_one(user_data: dict) -> dict:
         }
     """
     # 1. Load the data into a dataframe
+    df = pd.DataFrame([user_data])
     # 2. Load our loan classification model
+    model = joblib.load("risk_radar_model")
     # 3. Return the predictions
-
-    prediction = 0
-    confidence = 0.0
+    prediction = model.predict(df).item()
+    confidence = model.predict_proba(df).max(axis=1).item()
 
     return {"PREDICTION": prediction, "CONFIDENCE": confidence}
 
@@ -117,10 +145,11 @@ if __name__ == "__main__":
     print("    Getting prediction for User: 22341 by passing the full data")
     print("********")
 
-    test_data = SAMPLE_MODELINPUT
-    prediction = predict_one(test_data)
+    test_data = {}
+    prediction = predict_one(SINGLE_PERSON_DATA)
     print(prediction)
 
+    exit()
     print("\n\n")
 
     print("********")
