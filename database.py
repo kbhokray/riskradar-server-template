@@ -12,10 +12,10 @@ from peewee import (
 
 db = MySQLDatabase(
     "defaultdb",
-    user="<your_db_admin>",
-    password="<your_db_password>",
-    host="<your_host_here>",
-    port=26979,
+    user="avnadmin",
+    password="AVNS_ZucuE21sOx2a5e6wIWm",
+    host="riskradar-kbhokray-c9a9.i.aivencloud.com",
+    port=11117,
 )
 
 
@@ -43,10 +43,32 @@ class PaymentDefault(Enum):
 
 
 class User(Model):
+    USER_ID = IntegerField(primary_key=True)
+    USER_NAME = CharField()
+    CREDIT_LIMIT = FloatField()
+    SEX = IntegerField(choices=[(status.value, status.name) for status in Sex])
+    EDUCATION = IntegerField(
+        choices=[(status.value, status.name) for status in Education]
+    )
+    MARITALSTATUS = IntegerField(
+        choices=[(status.value, status.name) for status in MaritalStatus]
+    )
+    AGE = IntegerField()
+    DID_DEFAULT_PAYMENT = IntegerField(
+        choices=[(status.value, status.name) for status in PaymentDefault]
+    )
+
     class Meta:
         database = db
 
 
 class PaymentData(Model):
+    # foreign key to User
+    USER_ID = ForeignKeyField(User, backref="payments", on_delete="CASCADE")
+    MONTH = IntegerField()
+    PAYMENTDELAY = IntegerField()
+    BILL_AMT = FloatField()
+    PAID_AMT = FloatField()
+
     class Meta:
         database = db

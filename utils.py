@@ -58,7 +58,7 @@ def convert_userdata_to_df(user_data: dict) -> dict:
     # Create the base dictionary with ordered fields
     result = pd.Series(
         {
-            "USER_ID": user_data["USER_ID"],
+            # "USER_ID": user_data["USER_ID"],
             "CREDIT_LIMIT": float(user_data["CREDIT_LIMIT"]),
             "SEX": user_data["SEX"],
             "EDUCATION": user_data["EDUCATION"],

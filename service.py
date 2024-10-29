@@ -35,7 +35,7 @@ SINGLE_PERSON_DATA = {
 }
 
 
-def predict_one(user_data: dict) -> dict:
+def predict_one(user_data: dict = SINGLE_PERSON_DATA) -> dict:
     """
     Predicts the loan risk for a single user.
 
@@ -77,8 +77,8 @@ def get_all_users() -> list[dict]:
             "USER_NAME": "Sandra Lewis"
         }]
     """
-    results = []
-    return results
+    users = User.select(User.USER_ID, User.USER_NAME).limit(20).dicts()
+    return list(users)
 
 
 def get_user_details(user_id) -> dict:
@@ -114,7 +114,27 @@ def get_user_details(user_id) -> dict:
             "USER_NAME": "Sandra Lewis"
         }
     """
-    user_dict = {}
+    user = User.get(User.USER_ID == user_id)
+    user_dict = {
+        "USER_ID": user.USER_ID,
+        "USER_NAME": user.USER_NAME,
+        "AGE": user.AGE,
+        "CREDIT_LIMIT": user.CREDIT_LIMIT,
+        "DID_DEFAULT_PAYMENT": user.DID_DEFAULT_PAYMENT,
+        "EDUCATION": user.EDUCATION,
+        "MARITALSTATUS": user.MARITALSTATUS,
+        "SEX": user.SEX,
+        "PAYMENT_DATA": [
+            {
+                "BILL_AMT": payment.BILL_AMT,
+                "MONTH": payment.MONTH,
+                "PAID_AMT": payment.PAID_AMT,
+                "PAYMENTDELAY": payment.PAYMENTDELAY,
+            }
+            for payment in user.payments
+        ],
+    }
+
     return user_dict
 
 
