@@ -17,7 +17,7 @@ CORS(app=app, supports_credentials=True)
 
 @app.route("/")
 def hello_world():
-    return "Hello World!"
+    return "Hey World!"
 
 
 if __name__ == "__main__":
